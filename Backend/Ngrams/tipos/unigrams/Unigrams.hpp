@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "../../../Utils/Tokenizador.hpp"
+#include "../../../utils/tokenizador.hpp"
 #include "../../Ngram_Base/NGramBase.hpp"
 
 class Unigram : public NGramBase {

@@ -1,4 +1,4 @@
-#include "Tokenizador.hpp"
+#include "tokenizador.hpp"
 
 Tokenizador::Tokenizador() {
     tokens = nullptr;
@@ -9,34 +9,55 @@ Tokenizador::~Tokenizador() {
     limpiar();
 }
 
+bool Tokenizador::esLetra(char c) {
+    // A–Z o a–z
+    return (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z');
+}
+
+char Tokenizador::aMinuscula(char c) {
+    if (c >= 'A' && c <= 'Z') 
+        return c + 32;
+    return c;
+}
+
 void Tokenizador::tokenizar(const char* texto) {
-    if (tokens != nullptr) limpiar();
-    if (!texto) return;
+    limpiar();
 
-    int espacios = 0;
-    for (int i = 0; texto[i] != '\0'; i++) {
-        if (texto[i] == ' ') espacios++;
-    }
-    cantidad = espacios + 1;
+    tokens = new char*[1000];
+    cantidad = 0;
 
-    tokens = new char*[cantidad];
-    for (int i = 0; i < cantidad; i++) {
-        tokens[i] = new char[50];
-        for (int j = 0; j < 50; j++) tokens[i][j] = '\0';
-    }
+    char temp[100];
+    int pos = 0;
 
-    int indice = 0, pos = 0;
-    for (int i = 0; texto[i] != '\0'; i++) {
-        if (texto[i] != ' ' && texto[i] != '\n' && texto[i] != '\t') {
-            tokens[indice][pos++] = texto[i];
-        } else if (pos > 0) { 
-            tokens[indice][pos] = '\0';
-            indice++;
-            pos = 0;
+    for (int i = 0; texto[i] != 0; i++) {
+        char c = texto[i];
+
+        if (esLetra(c)) {
+            temp[pos++] = aMinuscula(c);
+        } else {
+            if (pos > 0) {
+                temp[pos] = '\0';
+
+                tokens[cantidad] = new char[pos + 1];
+                for (int j = 0; j <= pos; j++)
+                    tokens[cantidad][j] = temp[j];
+
+                cantidad++;
+                pos = 0;
+            }
         }
     }
-    if (pos > 0) tokens[indice][pos] = '\0';
-    else cantidad = indice;
+
+    if (pos > 0) {
+        temp[pos] = '\0';
+
+        tokens[cantidad] = new char[pos + 1];
+        for (int j = 0; j <= pos; j++)
+            tokens[cantidad][j] = temp[j];
+
+        cantidad++;
+    }
 }
 
 char** Tokenizador::obtenerTokens() {
@@ -49,9 +70,11 @@ int Tokenizador::obtenerCantidad() {
 
 void Tokenizador::limpiar() {
     if (tokens != nullptr) {
-        for (int i = 0; i < cantidad; i++) delete[] tokens[i];
+        for (int i = 0; i < cantidad; i++) {
+            delete[] tokens[i];
+        }
         delete[] tokens;
-        tokens = nullptr;
-        cantidad = 0;
     }
+    tokens = nullptr;
+    cantidad = 0;
 }
