@@ -1,107 +1,66 @@
 #include "FileManager.hpp"
+#include <fstream>
 
-const char* FileManager::DATA_PATH = "data/";
-
-bool FileManager::existeArchivo(const char* nombreArchivo) {
-    char ruta[100];
-    int i = 0, j = 0;
-    while (DATA_PATH[i] != '\0') {
-        ruta[i] = DATA_PATH[i];
-        i++;
-    }
-    while (nombreArchivo[j] != '\0') {
-        ruta[i++] = nombreArchivo[j++];
-    }
-    ruta[i] = '\0';
-
+bool FileManager::existeArchivo(const char* ruta) {
     std::ifstream archivo(ruta);
     return archivo.good();
 }
 
-void FileManager::guardarLista(const char* nombreArchivo, const char** datos, int cantidad) {
-    char ruta[100];
-    int i = 0, j = 0;
-    while (DATA_PATH[i] != '\0') {
-        ruta[i] = DATA_PATH[i];
-        i++;
-    }
-    while (nombreArchivo[j] != '\0') {
-        ruta[i++] = nombreArchivo[j++];
-    }
-    ruta[i] = '\0';
-
+bool FileManager::guardarTexto(const char* ruta, const char* contenido) {
     std::ofstream archivo(ruta);
-    if (!archivo.is_open()) {
-        std::cout << "Error al abrir " << ruta << " para escritura.\n";
-        return;
-    }
-
-    for (int k = 0; k < cantidad; k++) {
-        archivo << datos[k] << "\n";
-    }
-
-    archivo.close();
+    if (!archivo.is_open()) return false;
+    archivo << contenido;
+    return true;
 }
 
-char** FileManager::cargarLista(const char* nombreArchivo, int& cantidad) {
-    char ruta[100];
-    int i = 0, j = 0;
-    while (DATA_PATH[i] != '\0') {
-        ruta[i] = DATA_PATH[i];
-        i++;
-    }
-    while (nombreArchivo[j] != '\0') {
-        ruta[i++] = nombreArchivo[j++];
-    }
-    ruta[i] = '\0';
+bool FileManager::guardarLista(const char* ruta, const char** lista, int cantidad) {
+    std::ofstream archivo(ruta);
+    if (!archivo.is_open()) return false;
 
+    for (int i = 0; i < cantidad; i++) {
+        archivo << lista[i];
+        if (i < cantidad - 1) archivo << "\n";
+    }
+    return true;
+}
+
+char** FileManager::cargarLista(const char* ruta, int& cantidad) {
     std::ifstream archivo(ruta);
     if (!archivo.is_open()) {
-        std::cout << "No se pudo abrir " << ruta << " para lectura" << std::endl;
         cantidad = 0;
         return nullptr;
     }
 
     cantidad = 0;
-    char linea[256];
-    while (archivo.getline(linea, 256)) {
-        cantidad++;
-    }
+    char buffer[300];
+
+    while (archivo.getline(buffer, 300)) cantidad++;
 
     archivo.clear();
-    archivo.seekg(0, std::ios::beg);
+    archivo.seekg(0);
+
+    if (cantidad == 0) return nullptr;
 
     char** lista = new char*[cantidad];
-    for (int k = 0; k < cantidad; k++) {
-        lista[k] = new char[256];
-    }
-
     int idx = 0;
-    while (archivo.getline(linea, 256)) {
-        int l = 0;
-        while (linea[l] != '\0') {
-            lista[idx][l] = linea[l];
-            l++;
-        }
-        lista[idx][l] = '\0';
+
+    while (archivo.getline(buffer, 300)) {
+
+        int len = 0;
+        while (buffer[len] != '\0') len++;
+
+        lista[idx] = new char[len + 1];
+
+        for (int i = 0; i < len; i++)
+            lista[idx][i] = buffer[i];
+        lista[idx][len] = '\0';
+
         idx++;
     }
 
-    archivo.close();
     return lista;
 }
 
-void FileManager::eliminarArchivo(const char* nombreArchivo) {
-    char ruta[100];
-    int i = 0, j = 0;
-    while (DATA_PATH[i] != '\0') {
-        ruta[i] = DATA_PATH[i];
-        i++;
-    }
-    while (nombreArchivo[j] != '\0') {
-        ruta[i++] = nombreArchivo[j++];
-    }
-    ruta[i] = '\0';
-
-    std::remove(ruta);
+void FileManager::eliminarArchivo(const char* ruta) {
+    remove(ruta);
 }

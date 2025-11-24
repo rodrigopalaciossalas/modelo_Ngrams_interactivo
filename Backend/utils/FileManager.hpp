@@ -1,25 +1,15 @@
-#ifndef TOKENIZADOR_HPP
-#define TOKENIZADOR_HPP
+#ifndef FILEMANAGER_HPP
+#define FILEMANAGER_HPP
 
-class Tokenizador {
-private:
-    char** tokens;
-    int cantidad;
-    int capacidadTokens;
+#include <fstream>
 
-    bool esLetra(char c);
-    char aMinuscula(char c);
-
-    void agregarToken(const char* palabra, int longitud);
-
+class FileManager {
 public:
-    Tokenizador();
-    ~Tokenizador();
-
-    void tokenizar(const char* texto);
-    char** obtenerTokens();
-    int obtenerCantidad();
-    void limpiar();
+    static bool existeArchivo(const char* ruta);
+    static bool guardarTexto(const char* ruta, const char* contenido);
+    static bool guardarLista(const char* ruta, const char** lista, int cantidad);
+    static char** cargarLista(const char* ruta, int& cantidad);
+    static void eliminarArchivo(const char* ruta);
 };
 
 #endif

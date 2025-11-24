@@ -1,23 +1,19 @@
-#include <iostream>
-#include <string>
-
-#ifndef NGramBase_HPP
-#define NGramBase_HPP
+#ifndef NGRAMBASE_HPP
+#define NGRAMBASE_HPP
 
 class NGramBase {
-    protected:
-        int n; 
-        int cant;
-    public:
-        NGramBase(int valor);
-        virtual ~NGramBase();
+protected:
+    int n;
 
-        virtual void generar(const char* texto) = 0;   
-        virtual void contar() = 0;                     
-        virtual void guardar(const char* ruta) = 0;  
+public:
+    NGramBase(int n_) : n(n_) {}
+    virtual ~NGramBase() {}
 
+    virtual void procesarTokens(char** tokens, int cantidadTokens) = 0;
+    virtual char** obtenerNgrams(int& cantidadOut) = 0;
+    virtual void limpiar() = 0;
 
-        int obN() const;         
-        int obCant() const;
+    int obtenerN() const { return n; }
 };
+
 #endif

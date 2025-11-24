@@ -1,5 +1,4 @@
 #include "Bigram.hpp"
-#include <iostream>
 
 Bigram::Bigram() : NGramBase(2) {
     bigrams = nullptr;
@@ -8,146 +7,132 @@ Bigram::Bigram() : NGramBase(2) {
 }
 
 Bigram::~Bigram() {
-    if (bigrams) {
+    limpiar();
+}
+
+void Bigram::limpiar() {
+    if (bigrams != nullptr) {
         for (int i = 0; i < cantidad; i++) {
             delete[] bigrams[i];
         }
         delete[] bigrams;
     }
-    if (frecuencias) delete[] frecuencias;
+    if (frecuencias != nullptr)
+        delete[] frecuencias;
+
+    bigrams = nullptr;
+    frecuencias = nullptr;
+    cantidad = 0;
 }
 
-void Bigram::generar(const char* texto) {
-    Tokenizador tok;
-    tok.tokenizar(texto);
+int Bigram::comparar(const char* a, const char* b) {
+    int i = 0;
+    while (a[i] != 0 || b[i] != 0) {
+        if (a[i] != b[i]) return 0;
+        i++;
+    }
+    return 1;
+}
 
-    int n = tok.obtenerCantidad();
-    char** tokens = tok.obtenerTokens();
+void Bigram::agregarBigrama(const char* w1, const char* w2) {
+    int t1 = 0; while (w1[t1] != 0) t1++;
+    int t2 = 0; while (w2[t2] != 0) t2++;
 
-    if (n < 2) return;
+    int total = t1 + t2 + 2; 
+    char* nuevo = new char[total];
 
-    // Máximo número de bigramas posibles = n - 1
-    bigrams = new char*[n - 1];
-    frecuencias = new int[n - 1];
+    int k = 0;
+    for (int i = 0; i < t1; i++) nuevo[k++] = w1[i];
+    nuevo[k++] = ' ';
+    for (int i = 0; i < t2; i++) nuevo[k++] = w2[i];
+    nuevo[k] = '\0';
+
+    bigrams[cantidad] = nuevo;
+    frecuencias[cantidad] = 1;
+    cantidad++;
+}
+
+void Bigram::procesarTokens(char** tokens, int cantidadTokens) {
+    limpiar();
+
+    if (cantidadTokens < 2) return;
+
+    bigrams = new char*[cantidadTokens - 1];
+    frecuencias = new int[cantidadTokens - 1];
     cantidad = 0;
 
-    // Generar cada bigrama
-    for (int i = 0; i < n - 1; i++) {
-        const char* p1 = tokens[i];
-        const char* p2 = tokens[i + 1];
-
-        // Obtener tamaños manualmente (sin strlen)
-        int tam1 = 0; while (p1[tam1] != '\0') tam1++;
-        int tam2 = 0; while (p2[tam2] != '\0') tam2++;
-
-        int total = tam1 + tam2 + 2; // espacio + '\0'
-
-        bigrams[cantidad] = new char[total];
-
-        // Copiar palabra 1
-        int k = 0;
-        for (int j = 0; j < tam1; j++) {
-            bigrams[cantidad][k++] = p1[j];
-        }
-
-        // espacio
-        bigrams[cantidad][k++] = ' ';
-
-        // copiar palabra 2
-        for (int j = 0; j < tam2; j++) {
-            bigrams[cantidad][k++] = p2[j];
-        }
-
-        // terminar cadena
-        bigrams[cantidad][k] = '\0';
-
-        frecuencias[cantidad] = 1;
-        cantidad++;
+    for (int i = 0; i < cantidadTokens - 1; i++) {
+        agregarBigrama(tokens[i], tokens[i + 1]);
     }
-}
-
-void Bigram::contar() {
-    if (cantidad == 0) return;
 
     for (int i = 0; i < cantidad; i++) {
         for (int j = i + 1; j < cantidad; j++) {
+            if (frecuencias[j] == 0) continue;
 
-            // Comparar cadenas sin strcmp
-            int k = 0;
-            bool iguales = true;
-
-            while (bigrams[i][k] != '\0' || bigrams[j][k] != '\0') {
-                if (bigrams[i][k] != bigrams[j][k]) {
-                    iguales = false;
-                    break;
-                }
-                k++;
-            }
-
-            if (iguales) {
-                frecuencias[i]++;       
-                frecuencias[j] = 0;     // marcar duplicado
+            if (comparar(bigrams[i], bigrams[j])) {
+                frecuencias[i]++;
+                frecuencias[j] = 0;
             }
         }
     }
 }
 
-void Bigram::guardar(const char* ruta) {
-    // Recuento final de bigramas únicos
+char** Bigram::obtenerNgrams(int& cantidadOut) {
     int reales = 0;
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < cantidad; i++)
         if (frecuencias[i] > 0)
             reales++;
-    }
 
-    // Crear un array temporal para guardar
+    cantidadOut = reales;
+
+    if (reales == 0) return nullptr;
+
     char** salida = new char*[reales];
     int idx = 0;
 
     for (int i = 0; i < cantidad; i++) {
         if (frecuencias[i] == 0) continue;
 
-        // Crear cadena final "bigrama - frecuencia"
-        int tam = 0;
-        while (bigrams[i][tam] != '\0') tam++;
+        const char* bg = bigrams[i];
 
-        char* linea = new char[tam + 10];
-        
+        int t = 0; while (bg[t] != 0) t++;
+
+        char num[12];
+        int pos = 0;
+        int f = frecuencias[i];
+
+        if (f == 0) f = 1;
+
+        int temp = f;
+        while (temp > 0) {
+            num[pos++] = (temp % 10) + '0';
+            temp /= 10;
+        }
+
+        num[pos] = 0;
+
+        char numFinal[12];
+        int k2 = 0;
+        for (int p = pos - 1; p >= 0; p--)
+            numFinal[k2++] = num[p];
+        numFinal[k2] = '\0';
+
+        int total = t + k2 + 4;
+        char* linea = new char[total];
         int k = 0;
-        for (int j = 0; j < tam; j++)
-            linea[k++] = bigrams[i][j];
 
+        for (int j = 0; j < t; j++) linea[k++] = bg[j];
         linea[k++] = ' ';
         linea[k++] = '-';
         linea[k++] = ' ';
 
-        // convertir frecuencia a char*
-        int f = frecuencias[i];
-        char num[10];
-        int pos = 0;
-
-        while (f > 0) {
-            num[pos++] = (f % 10) + '0';
-            f /= 10;
-        }
-
-        // invertir número
-        for (int j = pos - 1; j >= 0; j--)
-            linea[k++] = num[j];
-
+        int p = 0;
+        while (numFinal[p] != 0)
+            linea[k++] = numFinal[p++];
         linea[k] = '\0';
 
         salida[idx++] = linea;
     }
 
-    FileManager::guardarLista(ruta, (const char**)salida, reales);
-
-    for (int i = 0; i < reales; i++)
-        delete[] salida[i];
-
-    delete[] salida;
+    return salida;
 }
-
-char** Bigram::obtenerBigrams() { return bigrams; }
-int* Bigram::obtenerFrecuencias() { return frecuencias; }
-int Bigram::obtenerCantidadBigrams() { return cantidad; }

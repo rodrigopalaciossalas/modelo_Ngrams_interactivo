@@ -2,26 +2,25 @@
 #define BIGRAM_HPP
 
 #include "../../Ngram_Base/NGramBase.hpp"
-#include "../../../utils/tokenizador.hpp"
+#include "../../../utils/Tokenizador.hpp"
 #include "../../../utils/FileManager.hpp"
 
 class Bigram : public NGramBase {
 private:
-    char** bigrams;      // Lista de bigramas generados
-    int* frecuencias;    // Frecuencia de cada bigrama
-    int cantidad;        // Cantidad de bigramas únicos
+    char** bigrams;    
+    int* frecuencias;  
+    int cantidad;      
+
+    int comparar(const char* a, const char* b);
+    void agregarBigrama(const char* b1, const char* b2);
 
 public:
     Bigram();
     ~Bigram();
 
-    void generar(const char* texto) override;
-    void contar() override;
-    void guardar(const char* ruta) override;
-
-    char** obtenerBigrams();
-    int* obtenerFrecuencias();
-    int obtenerCantidadBigrams();
+    void procesarTokens(char** tokens, int cantidadTokens) override;
+    char** obtenerNgrams(int& cantidadOut) override;
+    void limpiar() override;
 };
 
 #endif
