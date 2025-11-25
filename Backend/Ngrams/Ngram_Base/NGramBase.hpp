@@ -12,7 +12,6 @@ public:
     virtual void procesarTokens(char** tokens, int cantidadTokens) = 0;
     virtual char** obtenerNgrams(int& cantidadOut) = 0;
     virtual void limpiar() = 0;
-
     int obtenerN() const { return n; }
 };
 
