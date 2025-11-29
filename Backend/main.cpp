@@ -1,21 +1,15 @@
 #include <iostream>
-#include "utils/Tokenizador.hpp"
-#include "utils/TextProcessor.hpp"
 #include "utils/FileManager.hpp"
 #include "Ngrams/manager/NGramManager.hpp"
 #include "Ngrams/tipos/bigrams/Bigram.hpp"
 
 int main() {
-    // Texto de prueba
-    const char* texto = "Hola como estas hola como andas";
+    const char* texto = "Hola como estas hola como te fue";
 
-    // Crear modelo bigram
     Bigram modelo;
 
-    // Crear manager
     NGramManager manager;
 
-    // Ejecutar pipeline y guardar en rutas
     manager.ejecutarYGuardar(
         &modelo,
         texto,
@@ -23,6 +17,6 @@ int main() {
         "data/general.txt"
     );
 
-    std::cout << "Bigramas generados y almacenados correctamente.\n";
+    std::cout << "si";
     return 0;
 }

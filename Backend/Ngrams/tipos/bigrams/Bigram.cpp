@@ -136,3 +136,104 @@ char** Bigram::obtenerNgrams(int& cantidadOut) {
 
     return salida;
 }
+
+const char* Bigram::predecir(const char* ultimaPalabra) {
+    if (bigrams == nullptr || cantidad == 0 || ultimaPalabra == nullptr) {
+        return "";
+    }
+    int len = 0;
+    while (ultimaPalabra[len] != '\0') {
+        char c = ultimaPalabra[len];
+        if (c >= '0' && c <= '9') return "";
+        len++;
+    }
+
+    int mejorFrecuencia = -1;
+    const char* mejorCandidato = ""; 
+
+    for (int i = 0; i < cantidad; i++) {
+        if (frecuencias[i] == 0) continue;
+
+        const char* bg = bigrams[i]; 
+
+        int j = 0;
+        bool coincide = true;
+        
+        while (j < len) {
+            char cBase = bg[j];              
+            char cInput = ultimaPalabra[j];  
+            if (cInput >= 'A' && cInput <= 'Z') {
+                cInput = cInput + 32; 
+            }
+
+            if (cBase != cInput) {
+                coincide = false;
+                break;
+            }
+            j++;
+        }
+        if (coincide) {
+            if (bg[j] == ' ') {
+                if (frecuencias[i] > mejorFrecuencia) {
+                    mejorFrecuencia = frecuencias[i];
+                    mejorCandidato = bg + j + 1; 
+                }
+            }
+        }
+    }
+    
+    return mejorCandidato;
+}
+
+void Bigram::cargarDatos(const char* rutaArchivo) {
+    int lineasLeidas = 0;
+    
+    char** listaCruda = FileManager::cargarLista(rutaArchivo, lineasLeidas);
+    
+    if (listaCruda == nullptr || lineasLeidas == 0) return;
+
+    int totalCapacidad = cantidad + lineasLeidas;
+    char** nuevosBigrams = new char*[totalCapacidad];
+    int* nuevasFrecuencias = new int[totalCapacidad];
+
+    for (int i = 0; i < cantidad; i++) {
+        nuevosBigrams[i] = bigrams[i];
+        nuevasFrecuencias[i] = frecuencias[i];
+    }
+
+    if (bigrams) delete[] bigrams;
+    if (frecuencias) delete[] frecuencias;
+
+    bigrams = nuevosBigrams;
+    frecuencias = nuevasFrecuencias;
+
+    for (int i = 0; i < lineasLeidas; i++) {
+        char* linea = listaCruda[i];
+        
+        int len = 0;
+        int posGuion = -1;
+        while (linea[len] != '\0') {
+            if (linea[len] == '-' && posGuion == -1) {
+                posGuion = len;
+            }
+            len++;
+        }
+
+        if (posGuion != -1) {
+            int freq = cadenaAEntero(linea + posGuion + 2);
+
+            int lenTexto = posGuion - 1;
+            
+            if (lenTexto > 0) {
+                char* nuevoTexto = new char[lenTexto + 1];
+                copiarCadena(nuevoTexto, linea, lenTexto);
+                
+                bigrams[cantidad] = nuevoTexto;
+                frecuencias[cantidad] = freq;
+                cantidad++;
+            }
+        }
+        delete[] linea; 
+    }
+    delete[] listaCruda;
+}

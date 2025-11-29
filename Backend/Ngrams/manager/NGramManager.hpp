@@ -7,6 +7,7 @@ class NGramManager {
 public:
     void ejecutarYGuardar(NGramBase* modelo, const char* texto,
                           const char* rutaEspecifica, const char* rutaGeneral);
+    void inicializarModelo(NGramBase* modelo, const char* rutaArchivo);
 };
 
 #endif

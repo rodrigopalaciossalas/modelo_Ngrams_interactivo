@@ -21,6 +21,8 @@ public:
     void procesarTokens(char** tokens, int cantidadTokens) override;
     char** obtenerNgrams(int& cantidadOut) override;
     void limpiar() override;
+    const char* predecir(const char* ultimaPalabra) override;
+    void cargarDatos(const char* rutaArchivo) override;
 };
 
 #endif

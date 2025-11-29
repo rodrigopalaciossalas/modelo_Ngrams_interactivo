@@ -23,3 +23,8 @@ void NGramManager::ejecutarYGuardar(NGramBase* modelo, const char* texto,
     modelo->limpiar();
     tz.limpiar();
 }
+void NGramManager::inicializarModelo(NGramBase* modelo, const char* rutaArchivo) {
+    if (modelo == nullptr || rutaArchivo == nullptr) return;
+
+    modelo->cargarDatos(rutaArchivo);
+}
