@@ -3,5 +3,6 @@
         "activityBar.background": "#4C1024",
         "titleBar.activeBackground": "#6A1733",
         "titleBar.activeForeground": "#FEFAFC"
-    }
+    },
+    "cmake.sourceDirectory": "D:/programacion/cc1/modelo_Ngrams_interactivo/Frontend"
 }

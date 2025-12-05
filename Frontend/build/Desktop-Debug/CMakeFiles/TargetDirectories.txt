@@ -1,9 +1,0 @@
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/Frontend.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/list_install_components.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/install.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/install/local.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/install/strip.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/Frontend_autogen_timestamp_deps.dir
-/home/ryther/Documentos/proyectos_programacion/modelo_Ngrams_interactivo/Frontend/build/Desktop-Debug/CMakeFiles/Frontend_autogen.dir

@@ -1,0 +1,3 @@
+D:\Tools\CMake_64\bin\cmake.exe -E rm -f CMakeFiles\Frontend.dir/objects.a
+D:\Tools\mingw1310_64\bin\ar.exe qc CMakeFiles\Frontend.dir/objects.a @CMakeFiles\Frontend.dir\objects1.rsp
+D:\Tools\mingw1310_64\bin\g++.exe -DQT_QML_DEBUG -g -mwindows -Wl,--whole-archive CMakeFiles\Frontend.dir/objects.a -Wl,--no-whole-archive -o Frontend.exe -Wl,--out-implib,libFrontend.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Frontend.dir\linkLibs.rsp

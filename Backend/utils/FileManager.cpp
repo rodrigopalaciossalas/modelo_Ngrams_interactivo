@@ -1,18 +1,6 @@
 #include "FileManager.hpp"
 #include <fstream>
 
-bool FileManager::existeArchivo(const char* ruta) {
-    std::ifstream archivo(ruta);
-    return archivo.good();
-}
-
-bool FileManager::guardarTexto(const char* ruta, const char* contenido) {
-    std::ofstream archivo(ruta);
-    if (!archivo.is_open()) return false;
-    archivo << contenido;
-    return true;
-}
-
 bool FileManager::guardarLista(const char* ruta, const char** lista, int cantidad) {
     std::ofstream archivo(ruta);
     if (!archivo.is_open()) return false;
@@ -20,6 +8,16 @@ bool FileManager::guardarLista(const char* ruta, const char** lista, int cantida
     for (int i = 0; i < cantidad; i++) {
         archivo << lista[i];
         if (i < cantidad - 1) archivo << "\n";
+    }
+    return true;
+}
+
+bool FileManager::guardarListaAppend(const char* ruta, const char** lista, int cantidad) {
+    std::ofstream archivo(ruta, std::ios::app);
+    if (!archivo.is_open()) return false;
+
+    for (int i = 0; i < cantidad; i++) {
+        archivo << lista[i] << "\n";
     }
     return true;
 }
@@ -59,8 +57,4 @@ char** FileManager::cargarLista(const char* ruta, int& cantidad) {
     }
 
     return lista;
-}
-
-void FileManager::eliminarArchivo(const char* ruta) {
-    remove(ruta);
 }

@@ -1,5 +1,23 @@
 #include "Bigram.hpp"
 
+
+static int cadenaAEntero(const char* s) {
+    if (!s) return 0;
+    int i = 0;
+    while (s[i] == ' ') i++;
+    int val = 0;
+    while (s[i] >= '0' && s[i] <= '9') {
+        val = val * 10 + (s[i] - '0');
+        i++;
+    }
+    return val;
+}
+
+static void copiarCadena(char* dest, const char* src, int len) {
+    for (int i = 0; i < len; i++) dest[i] = src[i];
+    dest[len] = '\0';
+}
+
 Bigram::Bigram() : NGramBase(2) {
     bigrams = nullptr;
     frecuencias = nullptr;
@@ -209,7 +227,7 @@ void Bigram::cargarDatos(const char* rutaArchivo) {
 
     for (int i = 0; i < lineasLeidas; i++) {
         char* linea = listaCruda[i];
-        
+
         int len = 0;
         int posGuion = -1;
         while (linea[len] != '\0') {
@@ -227,13 +245,24 @@ void Bigram::cargarDatos(const char* rutaArchivo) {
             if (lenTexto > 0) {
                 char* nuevoTexto = new char[lenTexto + 1];
                 copiarCadena(nuevoTexto, linea, lenTexto);
-                
-                bigrams[cantidad] = nuevoTexto;
-                frecuencias[cantidad] = freq;
-                cantidad++;
+
+
+                int encontrado = -1;
+                for (int k = 0; k < cantidad; k++) {
+                    if (comparar(nuevosBigrams[k], nuevoTexto)) { encontrado = k; break; }
+                }
+
+                if (encontrado != -1) {
+                    nuevasFrecuencias[encontrado] += freq;
+                    delete[] nuevoTexto; // ya no se necesita
+                } else {
+                    nuevosBigrams[cantidad] = nuevoTexto;
+                    nuevasFrecuencias[cantidad] = freq;
+                    cantidad++;
+                }
             }
         }
-        delete[] linea; 
+        delete[] linea;
     }
     delete[] listaCruda;
 }
