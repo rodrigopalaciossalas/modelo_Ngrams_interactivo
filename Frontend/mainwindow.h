@@ -7,7 +7,6 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QProgressBar>
 #include <QStringList>
 #include <QByteArray>
 #include <QListWidgetItem>
@@ -33,6 +32,7 @@ private:
     void setupUI();
     void setupBackend();
     void updateOptions();
+    void handleInputWord(QString word);
 
     QLabel* m_textDisplay;
     QLabel* m_currentWordLabel;
@@ -41,17 +41,15 @@ private:
     QPushButton* m_restartButton;
     QLineEdit* m_inputLine;
     QPushButton* m_addButton;
-    QSpinBox* m_predictionCountSpinner;
-    QProgressBar* m_progressBar;
+    QSpinBox* m_spinner;
 
     NGramManager m_manager;
     Bigram m_modelo;
     PredictionSession m_session;
-    QByteArray m_dbPath; // stored DB path bytes for passing to backend
-
+    QByteArray m_dbPath;
+    
     QString m_currentText;
     QStringList m_history;
-    int m_currentPredictionCount;
 };
 
 #endif // MAINWINDOW_H

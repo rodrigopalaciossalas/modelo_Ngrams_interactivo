@@ -6,8 +6,7 @@ bool FileManager::guardarLista(const char* ruta, const char** lista, int cantida
     if (!archivo.is_open()) return false;
 
     for (int i = 0; i < cantidad; i++) {
-        archivo << lista[i];
-        if (i < cantidad - 1) archivo << "\n";
+        archivo << lista[i] << "\n";
     }
     return true;
 }

@@ -13,6 +13,8 @@ private:
     const char* palabraActual;
     int cantidadOpciones;
     const char* rutaBD;
+    int* ultimasFrecuencias;
+    int ultimasFrecuenciasCount;
 
 public:
     PredictionSession();
@@ -26,6 +28,11 @@ public:
     bool retroceder();
     void finalizar();
     int obtenerCantidadPalabras() const;
+    
+    // Nuevas funcionalidades
+    void setCantidadOpciones(int n);
+    bool seleccionarPalabra(const char* palabra);
+    int* obtenerUltimasFrecuencias(int& cantOut);
 };
 
 #endif

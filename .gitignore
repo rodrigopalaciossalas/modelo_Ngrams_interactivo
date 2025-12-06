@@ -1,0 +1,25 @@
+# Compilados y binarios
+*.exe
+*.o
+*.obj
+*.dll
+
+# Carpetas de build de Qt / CMake / Make
+build/
+bin/
+debug/
+release/
+cmake-build-*/
+.cmake/
+
+# Archivos de configuracion de usuario (Qt Creator)
+*.user
+CMakeUserPresets.json
+
+# VS Code / IDEs
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.log

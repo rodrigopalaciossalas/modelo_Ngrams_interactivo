@@ -419,6 +419,8 @@ CMakeFiles/Frontend.dir/mainwindow.cpp.obj: \
  D:/6.10.1/mingw_64/include/QtWidgets/QPushButton \
  D:/6.10.1/mingw_64/include/QtWidgets/qpushbutton.h \
  D:/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
+ D:/6.10.1/mingw_64/include/QtWidgets/QSpinBox \
+ D:/6.10.1/mingw_64/include/QtWidgets/qspinbox.h \
  D:/6.10.1/mingw_64/include/QtCore/QStringList \
  D:/6.10.1/mingw_64/include/QtCore/qstringlist.h \
  D:/6.10.1/mingw_64/include/QtCore/QByteArray \
@@ -477,12 +479,6 @@ CMakeFiles/Frontend.dir/mainwindow.cpp.obj: \
  D:/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/codecvt \
  D:/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_dir.h \
  D:/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_ops.h \
- D:/6.10.1/mingw_64/include/QtCore/QFileInfo \
- D:/6.10.1/mingw_64/include/QtCore/qfileinfo.h \
- D:/6.10.1/mingw_64/include/QtCore/qfile.h \
- D:/6.10.1/mingw_64/include/QtCore/qdatetime.h \
- D:/6.10.1/mingw_64/include/QtCore/qcalendar.h \
- D:/6.10.1/mingw_64/include/QtCore/qtimezone.h \
  D:/6.10.1/mingw_64/include/QtCore/QCoreApplication \
  D:/6.10.1/mingw_64/include/QtCore/qcoreapplication.h \
  D:/6.10.1/mingw_64/include/QtCore/qcoreevent.h \
@@ -496,5 +492,9 @@ CMakeFiles/Frontend.dir/mainwindow.cpp.obj: \
  D:/6.10.1/mingw_64/include/QtCore/QDir \
  D:/6.10.1/mingw_64/include/QtCore/qdir.h \
  D:/6.10.1/mingw_64/include/QtCore/qdirlisting.h \
+ D:/6.10.1/mingw_64/include/QtCore/qdatetime.h \
+ D:/6.10.1/mingw_64/include/QtCore/qcalendar.h \
+ D:/6.10.1/mingw_64/include/QtCore/qfile.h \
  D:/6.10.1/mingw_64/include/QtCore/qfileinfo.h \
+ D:/6.10.1/mingw_64/include/QtCore/qtimezone.h \
  D:/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iostream

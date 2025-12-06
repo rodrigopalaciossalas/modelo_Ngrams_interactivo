@@ -419,6 +419,8 @@ CMakeFiles/Frontend.dir/main.cpp.obj: \
  D:/6.10.1/mingw_64/include/QtWidgets/QPushButton \
  D:/6.10.1/mingw_64/include/QtWidgets/qpushbutton.h \
  D:/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
+ D:/6.10.1/mingw_64/include/QtWidgets/QSpinBox \
+ D:/6.10.1/mingw_64/include/QtWidgets/qspinbox.h \
  D:/6.10.1/mingw_64/include/QtCore/QStringList \
  D:/6.10.1/mingw_64/include/QtCore/qstringlist.h \
  D:/6.10.1/mingw_64/include/QtCore/QByteArray \

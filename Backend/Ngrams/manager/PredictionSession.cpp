@@ -6,6 +6,8 @@ PredictionSession::PredictionSession() {
     palabraActual = "";
     cantidadOpciones = 3;
     rutaBD = nullptr;
+    ultimasFrecuencias = nullptr;
+    ultimasFrecuenciasCount = 0;
 }
 
 PredictionSession::~PredictionSession() {
@@ -110,9 +112,16 @@ char** PredictionSession::obtenerOpciones(int& cantidadOut) {
     }
 
     int resultado_count = (cantidadCandidatos < cantidadOpciones) ? cantidadCandidatos : cantidadOpciones;
+    
+    // Limpiar frecuencias anteriores
+    if (ultimasFrecuencias) delete[] ultimasFrecuencias;
+    ultimasFrecuenciasCount = resultado_count;
+    ultimasFrecuencias = new int[ultimasFrecuenciasCount];
+    
     char** resultado = new char*[resultado_count];
     for (int i = 0; i < resultado_count; i++) {
         resultado[i] = candidatos[i];
+        ultimasFrecuencias[i] = frecuencias[i];
     }
 
     for (int i = resultado_count; i < cantidadCandidatos; i++) {
@@ -175,8 +184,39 @@ void PredictionSession::finalizar() {
     palabraActual = "";
     manager = nullptr;
     modelo = nullptr;
+    if (ultimasFrecuencias) {
+        delete[] ultimasFrecuencias;
+        ultimasFrecuencias = nullptr;
+    }
+    ultimasFrecuenciasCount = 0;
 }
 
 int PredictionSession::obtenerCantidadPalabras() const {
     return textoActual.obtenerCantidad();
+}
+
+void PredictionSession::setCantidadOpciones(int n) {
+    if (n > 0) cantidadOpciones = n;
+}
+
+bool PredictionSession::seleccionarPalabra(const char* palabra) {
+    if (!manager || !palabra) return false;
+    
+    // Verificar si estaba en las opciones para registrar predicción
+    int cantOps = 0;
+    // IMPORTANTE: obtenerOpciones recalcula, pero necesitamos saber si LA ANTERIOR predicción incluía esta palabra.
+    // Simplificación: asumo que si la escriben manual, siempre reforzamos la relación palabraActual -> palabra.
+    
+    if (rutaBD != nullptr) {
+        manager->registrarPrediccion(palabraActual, palabra, rutaBD);
+    }
+    
+    textoActual.agregarPalabra(palabra);
+    palabraActual = textoActual.obtenerUltimaPalabra(); // Actualizar puntero
+    return true;
+}
+
+int* PredictionSession::obtenerUltimasFrecuencias(int& cantOut) {
+    cantOut = ultimasFrecuenciasCount;
+    return ultimasFrecuencias;
 }

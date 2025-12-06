@@ -2,7 +2,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFile>
-#include <QFileInfo>
 #include <QCoreApplication>
 #include <QDir>
 #include <iostream>
@@ -14,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     setGeometry(100, 100, 600, 400);
     setupBackend();
     setupUI();
+    m_spinner->setValue(3); // Default value
 }
 
 MainWindow::~MainWindow() {
@@ -24,12 +24,8 @@ void MainWindow::setupBackend() {
     QStringList candidates;
     QString appDir = QCoreApplication::applicationDirPath();
     
-    // Build absolute paths from app directory going up to project root
-    // App is at: D:/programacion/cc1/modelo_Ngrams_interactivo/Frontend/build/Windows_manual-Debug
-    // We need: D:/programacion/cc1/modelo_Ngrams_interactivo/Backend/data/2grams_english.txt
-    
     QString projectRoot = QDir(appDir).filePath("../../../../..");
-    QDir(projectRoot).canonicalPath(); // normalize path
+    QDir(projectRoot).canonicalPath();
     
     candidates << QDir(projectRoot).filePath("Backend/data/2grams_english.txt");
     candidates << QDir(projectRoot).filePath("../Backend/data/2grams_english.txt");
@@ -39,12 +35,12 @@ void MainWindow::setupBackend() {
     candidates << QDir(appDir).filePath("../../../../Backend/data/2grams_english.txt");
     candidates << "D:/programacion/cc1/modelo_Ngrams_interactivo/Backend/data/2grams_english.txt";
 
-    std::cerr << "[DEBUG] App dir: " << appDir.toStdString() << std::endl;
+
     
     QString chosen;
     for (int i = 0; i < candidates.size(); i++) {
         bool exists = QFile::exists(candidates[i]);
-        std::cerr << "[DEBUG] Try " << i << ": " << candidates[i].toStdString() << " [" << (exists ? "OK" : "X") << "]" << std::endl;
+
         if (exists) { chosen = candidates[i]; break; }
     }
 
@@ -54,9 +50,7 @@ void MainWindow::setupBackend() {
     }
 
     m_dbPath = chosen.toUtf8();
-    std::cerr << "[DEBUG] Using DB: " << m_dbPath.constData() << std::endl;
     m_manager.inicializarModelo(&m_modelo, m_dbPath.constData());
-    std::cerr << "[DEBUG] Model initialized" << std::endl;
 }
 
 void MainWindow::setupUI() {
@@ -90,10 +84,23 @@ void MainWindow::setupUI() {
     inputLayout->addWidget(m_addButton);
     mainLayout->addLayout(inputLayout);
 
+    m_spinner = new QSpinBox(this);
+    m_spinner->setRange(1, 10);
+    m_spinner->setPrefix("Predicciones: ");
+    m_spinner->setMinimumWidth(120);
+    inputLayout->addWidget(m_spinner);
+
     connect(m_addButton, &QPushButton::clicked, this, &MainWindow::onAddClicked);
     connect(m_optionsList, &QListWidget::itemActivated, this, &MainWindow::onOptionActivated);
     connect(m_backButton, &QPushButton::clicked, this, &MainWindow::onBackClicked);
     connect(m_restartButton, &QPushButton::clicked, this, &MainWindow::onRestartClicked);
+    
+    connect(m_spinner, qOverload<int>(&QSpinBox::valueChanged), this, [this](int i){
+        m_session.setCantidadOpciones(i);
+        updateOptions();
+    });
+
+    connect(m_inputLine, &QLineEdit::returnPressed, this, &MainWindow::onAddClicked);
 
     setCentralWidget(centralWidget);
 }
@@ -101,18 +108,29 @@ void MainWindow::setupUI() {
 void MainWindow::updateOptions() {
     int cantOps = 0;
     char** opciones = m_session.obtenerOpciones(cantOps);
-    std::cerr << "[DEBUG] obtenerOpciones returned " << cantOps << " options" << std::endl;
+
     m_optionsList->clear();
     if (opciones && cantOps > 0) {
         for (int i = 0; i < cantOps; ++i) {
-            std::cerr << "[DEBUG] Option " << i << ": " << opciones[i] << std::endl;
+
             QString word = QString::fromUtf8(opciones[i]);
-            m_optionsList->addItem(word);
+
+            int* freqs = m_session.obtenerUltimasFrecuencias(cantOps);
+            int totalFreq = 0;
+            for(int k=0; k<cantOps; k++) totalFreq += freqs[k];
+            
+            double porcentaje = 0.0;
+            if (totalFreq > 0) {
+                porcentaje = (double)freqs[i] / totalFreq * 100.0;
+            }
+            
+            QString label = QString("%1 (%2%)").arg(word).arg(porcentaje, 0, 'f', 1);
+            m_optionsList->addItem(label);
         }
         for (int i = 0; i < cantOps; ++i) delete[] opciones[i];
         delete[] opciones;
     } else {
-        std::cerr << "[DEBUG] No options" << std::endl;
+
     }
 }
 
@@ -126,7 +144,6 @@ void MainWindow::onOptionActivated(QListWidgetItem* item) {
             m_textDisplay->setText(QString::fromUtf8(texto));
             delete[] texto;
         }
-        // update current word label and options
         m_currentWordLabel->setText(QString("Palabra actual: %1").arg(QString::fromUtf8(m_session.obtenerPalabraActual())));
         updateOptions();
     }
@@ -153,22 +170,36 @@ void MainWindow::onAddClicked() {
     QString cleanWord = m_inputLine->text().trimmed().toLower();
     if (cleanWord.isEmpty()) return;
 
-    std::cerr << "[DEBUG] Adding word: " << cleanWord.toUtf8().constData() << std::endl;
+    QString validWord;
+    for (QChar c : cleanWord) {
+        if (c.isLetter()) {
+            validWord.append(c);
+        }
+    }
+    
+    if (validWord.isEmpty()) return;
+    cleanWord = validWord;
+
+
 
     const char* ruta = m_dbPath.isEmpty() ? nullptr : m_dbPath.constData();
     if (m_session.obtenerCantidadPalabras() == 0) {
-        std::cerr << "[DEBUG] Starting session" << std::endl;
-        if (!m_session.iniciar(&m_manager, &m_modelo, cleanWord.toUtf8().constData(), 3, ruta)) {
-            std::cerr << "[DEBUG] Session failed" << std::endl;
+        if (!m_session.iniciar(&m_manager, &m_modelo, cleanWord.toUtf8().constData(), m_spinner->value(), ruta)) {
             return;
         }
-        std::cerr << "[DEBUG] Session OK" << std::endl;
+    } else {
+        handleInputWord(cleanWord);
     }
-
+    
     m_inputLine->clear();
+
     char* texto = m_session.obtenerTextoCompleto();
     if (texto) { m_textDisplay->setText(QString::fromUtf8(texto)); delete[] texto; }
     m_currentWordLabel->setText(QString("Palabra actual: %1").arg(QString::fromUtf8(m_session.obtenerPalabraActual())));
-    std::cerr << "[DEBUG] Calling updateOptions" << std::endl;
+    
     updateOptions();
+}
+
+void MainWindow::handleInputWord(QString word) {
+    m_session.seleccionarPalabra(word.toUtf8().constData());
 }

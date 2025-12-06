@@ -6,15 +6,11 @@
 #include "Ngrams/tipos/unigrams/Unigrams.hpp"
 
 int main() {
-    const char* texto = "Hola como estas hola como te fue";
+    const char* texto = "the quick brown fox jumps over the lazy dog";
 
     Bigram modelo;
     NGramManager manager;
-
-
     const char* rutaDB = "data/2grams_english.txt";
-    manager.ejecutarYGuardar(&modelo, texto, nullptr, rutaDB);
-
 
     manager.inicializarModelo(&modelo, rutaDB);
 
@@ -23,15 +19,13 @@ int main() {
 
 
     PredictionSession sesion;
-    if (!sesion.iniciar(&manager, &modelo, "hola", 3)) {
-        std::cout << "Error al iniciar sesion" << std::endl;
+    if (!sesion.iniciar(&manager, &modelo, "the", 3)) {
+        std::cout << "Error al iniciar sesion. Verifica que el archivo data/2grams_english.txt exista." << std::endl;
         return 1;
     }
-
-    std::cout << "Palabra inicial: 'hola'" << std::endl;
+    std::cout << "Palabra inicial: 'the'" << std::endl;
     std::cout << "Texto actual: " << sesion.obtenerTextoCompleto() << std::endl;
     std::cout << std::endl;
-
 
     for (int ronda = 0; ronda < 3; ronda++) {
         int cantOps = 0;
@@ -42,8 +36,6 @@ int main() {
             for (int i = 0; i < cantOps; i++) {
                 std::cout << "  [" << i << "] " << opciones[i] << std::endl;
             }
-
-
             std::cout << "Seleccionando opcion [0]" << std::endl;
             if (sesion.seleccionarOpcion(0)) {
                 std::cout << "Palabra actual: '" << sesion.obtenerPalabraActual() << "'" << std::endl;
@@ -52,7 +44,6 @@ int main() {
                 std::cout << "No hay mas opciones para continuar" << std::endl;
                 break;
             }
-
 
             for (int i = 0; i < cantOps; i++) delete[] opciones[i];
             delete[] opciones;

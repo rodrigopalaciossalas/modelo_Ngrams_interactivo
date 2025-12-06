@@ -174,6 +174,7 @@ D:/programacion/cc1/modelo_Ngrams_interactivo/Frontend/build/Windows_manual-Debu
   D:/6.10.1/mingw_64/include/QtWidgets/QListWidgetItem \
   D:/6.10.1/mingw_64/include/QtWidgets/QMainWindow \
   D:/6.10.1/mingw_64/include/QtWidgets/QPushButton \
+  D:/6.10.1/mingw_64/include/QtWidgets/QSpinBox \
   D:/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qabstractitemview.h \
@@ -190,6 +191,7 @@ D:/programacion/cc1/modelo_Ngrams_interactivo/Frontend/build/Windows_manual-Debu
   D:/6.10.1/mingw_64/include/QtWidgets/qrubberband.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qsizepolicy.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qslider.h \
+  D:/6.10.1/mingw_64/include/QtWidgets/qspinbox.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qstyle.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qstyleoption.h \
   D:/6.10.1/mingw_64/include/QtWidgets/qtabbar.h \
