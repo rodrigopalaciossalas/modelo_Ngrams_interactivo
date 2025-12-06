@@ -3,7 +3,8 @@
 #include "Ngrams/manager/NGramManager.hpp"
 #include "Ngrams/manager/PredictionSession.hpp"
 #include "Ngrams/tipos/bigrams/Bigram.hpp"
-#include "Ngrams/tipos/unigrams/Unigrams.hpp"
+
+using namespace std;
 
 int main() {
     const char* texto = "the quick brown fox jumps over the lazy dog";
@@ -14,49 +15,49 @@ int main() {
 
     manager.inicializarModelo(&modelo, rutaDB);
 
-    std::cout << "=== DEMOSTRACION: SESION DE PREDICCION ===" << std::endl;
-    std::cout << std::endl;
-
+    cout << "--- demo del predictor ---" << endl;
+    cout << endl;
 
     PredictionSession sesion;
     if (!sesion.iniciar(&manager, &modelo, "the", 3)) {
-        std::cout << "Error al iniciar sesion. Verifica que el archivo data/2grams_english.txt exista." << std::endl;
+        cout << "error: no se pudo cargar el archivo data/2grams_english.txt" << endl;
         return 1;
     }
-    std::cout << "Palabra inicial: 'the'" << std::endl;
-    std::cout << "Texto actual: " << sesion.obtenerTextoCompleto() << std::endl;
-    std::cout << std::endl;
+    
+    cout << "palabra inicial: 'the'" << endl;
+    cout << "texto actual: " << sesion.obtenerTextoCompleto() << endl;
+    cout << endl;
 
     for (int ronda = 0; ronda < 3; ronda++) {
         int cantOps = 0;
         char** opciones = sesion.obtenerOpciones(cantOps);
 
-        std::cout << "Ronda " << (ronda + 1) << " - Opciones disponibles:" << std::endl;
+        cout << "ronda " << (ronda + 1) << " - opciones:" << endl;
         if (opciones) {
             for (int i = 0; i < cantOps; i++) {
-                std::cout << "  [" << i << "] " << opciones[i] << std::endl;
+                cout << "  [" << i << "] " << opciones[i] << endl;
             }
-            std::cout << "Seleccionando opcion [0]" << std::endl;
+            cout << "seleccionando la opcion [0]" << endl;
             if (sesion.seleccionarOpcion(0)) {
-                std::cout << "Palabra actual: '" << sesion.obtenerPalabraActual() << "'" << std::endl;
-                std::cout << "Texto completo: " << sesion.obtenerTextoCompleto() << std::endl;
+                cout << "palabra actual: '" << sesion.obtenerPalabraActual() << "'" << endl;
+                cout << "texto completo: " << sesion.obtenerTextoCompleto() << endl;
             } else {
-                std::cout << "No hay mas opciones para continuar" << std::endl;
+                cout << "ya no hay mas opciones" << endl;
                 break;
             }
 
             for (int i = 0; i < cantOps; i++) delete[] opciones[i];
             delete[] opciones;
         } else {
-            std::cout << "Sin opciones para continuar" << std::endl;
+            cout << "no hay predicciones" << endl;
             break;
         }
 
-        std::cout << std::endl;
+        cout << endl;
     }
 
     sesion.finalizar();
-    std::cout << "Sesion finalizada" << std::endl;
+    cout << "fin de la demo" << endl;
 
     return 0;
 }

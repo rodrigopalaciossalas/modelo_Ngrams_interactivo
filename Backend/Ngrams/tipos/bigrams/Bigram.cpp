@@ -254,7 +254,7 @@ void Bigram::cargarDatos(const char* rutaArchivo) {
 
                 if (encontrado != -1) {
                     nuevasFrecuencias[encontrado] += freq;
-                    delete[] nuevoTexto; // ya no se necesita
+                    delete[] nuevoTexto;
                 } else {
                     nuevosBigrams[cantidad] = nuevoTexto;
                     nuevasFrecuencias[cantidad] = freq;

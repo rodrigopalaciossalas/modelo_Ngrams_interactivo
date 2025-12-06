@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     setGeometry(100, 100, 600, 400);
     setupBackend();
     setupUI();
-    m_spinner->setValue(3); // Default value
+    m_spinner->setValue(3); 
 }
 
 MainWindow::~MainWindow() {

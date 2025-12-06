@@ -112,8 +112,7 @@ char** PredictionSession::obtenerOpciones(int& cantidadOut) {
     }
 
     int resultado_count = (cantidadCandidatos < cantidadOpciones) ? cantidadCandidatos : cantidadOpciones;
-    
-    // Limpiar frecuencias anteriores
+
     if (ultimasFrecuencias) delete[] ultimasFrecuencias;
     ultimasFrecuenciasCount = resultado_count;
     ultimasFrecuencias = new int[ultimasFrecuenciasCount];
@@ -202,11 +201,7 @@ void PredictionSession::setCantidadOpciones(int n) {
 bool PredictionSession::seleccionarPalabra(const char* palabra) {
     if (!manager || !palabra) return false;
     
-    // Verificar si estaba en las opciones para registrar predicción
     int cantOps = 0;
-    // IMPORTANTE: obtenerOpciones recalcula, pero necesitamos saber si LA ANTERIOR predicción incluía esta palabra.
-    // Simplificación: asumo que si la escriben manual, siempre reforzamos la relación palabraActual -> palabra.
-    
     if (rutaBD != nullptr) {
         manager->registrarPrediccion(palabraActual, palabra, rutaBD);
     }

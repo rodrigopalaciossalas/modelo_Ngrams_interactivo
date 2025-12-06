@@ -4,7 +4,6 @@ project(Frontend LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 
-# Use Qt6 from CMAKE_PREFIX_PATH
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
 include_directories(
@@ -20,11 +19,9 @@ set(PROJECT_SOURCES
     main.cpp
     mainwindow.cpp
 
-    # Backend sources required for linking
     ../Backend/Ngrams/manager/NGramManager.cpp
     ../Backend/Ngrams/manager/PredictionSession.cpp
     ../Backend/Ngrams/tipos/bigrams/Bigram.cpp
-    ../Backend/Ngrams/tipos/unigrams/Unigrams.CPP
     ../Backend/utils/FileManager.cpp
     ../Backend/utils/tokenizador.cpp
     ../Backend/utils/TextBuilder.cpp

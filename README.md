@@ -13,13 +13,13 @@ Si quieres probar que el código de C++ y los algoritmos funcionan bien sin la i
 Entras a la carpeta `Backend` y escribes este comando gigante:
 
 ```bash
-g++ main.cpp Ngrams/manager/NGramManager.cpp Ngrams/manager/PredictionSession.cpp Ngrams/tipos/bigrams/Bigram.cpp Ngrams/tipos/unigrams/Unigrams.CPP utils/FileManager.cpp utils/TextBuilder.cpp utils/tokenizador.cpp -o main.exe
+g++ main.cpp Ngrams/manager/NGramManager.cpp Ngrams/manager/PredictionSession.cpp Ngrams/tipos/bigrams/Bigram.cpp utils/FileManager.cpp utils/TextBuilder.cpp utils/tokenizador.cpp -o main.exe
 ```
 (Y luego ejecutas `main.exe`)
 
 **En Linux:**
 ```bash
-g++ main.cpp Ngrams/manager/NGramManager.cpp Ngrams/manager/PredictionSession.cpp Ngrams/tipos/bigrams/Bigram.cpp Ngrams/tipos/unigrams/Unigrams.CPP utils/FileManager.cpp utils/TextBuilder.cpp utils/tokenizador.cpp -o main
+g++ main.cpp Ngrams/manager/NGramManager.cpp Ngrams/manager/PredictionSession.cpp Ngrams/tipos/bigrams/Bigram.cpp utils/FileManager.cpp utils/TextBuilder.cpp utils/tokenizador.cpp -o main
 ```
 (Y luego `./main`)
 ...
